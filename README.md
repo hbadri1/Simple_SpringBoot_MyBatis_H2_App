@@ -5,9 +5,12 @@ You can run it with the java command java -jar committee-0.0.1-SNAPSHOT.jar. And
 
 # Run:
 After launching the app, you can:
+
     Get access to the web page via:
     http://localhost:8080
-    Get access to the json presentation of the output (like in json sample file you sent me):
+	
+    Get access to the json presentation of the output:
     http://localhost:8080/api
+	
     I also activated the H2 console (if any need) that could be accessed on:
     http://localhost:8080/h2
