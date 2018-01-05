@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="org.gso.committee.mapper.CommitteeMapper">
+
+	<!-- FIRST APPRAOCH: Join query: Did not work with me -->
+
+	<resultMap id="parentsMap" type="Committee">
+		<!-- For performance issues in MyIbatis we need to add <id> -->
+		<id property="code" column="code" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="p_code" column="p_code" />
+		<collection property="children" ofType="Committee"
+			javaType="ArrayList">
+			<id property="code" column="code" />
+			<result property="code" column="code" />
+			<result property="name" column="name" />
+			<result property="p_code" column="p_code" />
+		</collection>
+	</resultMap>
+
+
+	<select id="getParentsWithChildrenOld" resultMap="parentsMap">
+		select
+		parent.*,
+		child.* from committee parent join committee child on
+		parent.code=child.p_code;
+	</select>
+
+	<!-- SECOND APPROACH: Working with separate resultMaps -->
+
+	<resultMap id="parentsResut" type="Committee">
+		<collection property="children" javaType="ArrayList"
+			column="code" ofType="Committee" select="selectChildrenForParent">
+			<collection property="children" javaType="ArrayList"
+				column="code" ofType="Committee" select="selectChildrenForParent" />
+		</collection>
+	</resultMap>
+
+	<select id="getParentsWithChildren" resultMap="parentsResut">
+		SELECT * FROM
+		COMMITTEE WHERE P_CODE IS NULL
+	</select>
+
+	<select id="selectChildrenForParent" resultType="Committee">
+		SELECT * FROM
+		COMMITTEE WHERE P_CODE = #{code}
+	</select>
+
+
+</mapper>
